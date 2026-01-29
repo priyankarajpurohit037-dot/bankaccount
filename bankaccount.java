@@ -45,8 +45,8 @@ public class BankAccount {
         BankAccount myAccount = new BankAccount("Alex", "1000000000.00"); // 1 Billion
 
         myAccount.displayBalance();
-        myAccount.deposit("500000000.75"); // Adding half a billion and 75 cents
-        myAccount.withdraw("250.00");
+        myAccount.deposit("53"); // Adding half a billion and 75 cents
+        myAccount.withdraw("200");
         
         myAccount.displayBalance();
     }
