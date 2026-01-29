@@ -75,7 +75,7 @@ public class BankApp {
             int choice;
             do {
                 System.out.println("\n--- Banking Menu ---");
-                System.out.println("1. Deposit");
+                System.out.println("1. deposit");
                 System.out.println("2. Withdraw");
                 System.out.println("3. Display Account Details");
                 System.out.println("4. Exit");
@@ -101,7 +101,7 @@ public class BankApp {
                         account.displayAccountDetails();
                         break;
                     case 4:
-                        System.out.println("Thank you for banking with us!");
+                        System.out.println("Thank ");
                         break;
                     default:
                         System.out.println("Invalid choice. Please try again.");
