@@ -2,52 +2,57 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class BankAccount {
-    private String accountHolder;
+public class bankaccount {
+    private String owner;
     private BigDecimal balance;
 
-    // Constructor
-    public BankAccount(String accountHolder, String initialBalance) {
-        this.accountHolder = accountHolder;
-        // We use a String constructor for BigDecimal to maintain exact precision
-        this.balance = new BigDecimal(initialBalance);
+    // Constructor using String to prevent precision loss
+    public bankaccount(String owner, String startingBalance) {
+        this.owner = owner;
+        this.balance = new BigDecimal(startingBalance);
     }
 
-    // Method to deposit money
+    // Add money
     public void deposit(String amount) {
-        BigDecimal depositAmount = new BigDecimal(amount);
-        balance = balance.add(depositAmount);
-        System.out.println("Deposited: " + formatCurrency(depositAmount));
+        BigDecimal toAdd = new BigDecimal(amount);
+        this.balance = this.balance.add(toAdd);
+        System.out.println("Success! Deposited: " + formatMoney(toAdd));
     }
 
-    // Method to withdraw money
+    // Remove money
     public void withdraw(String amount) {
-        BigDecimal withdrawAmount = new BigDecimal(amount);
-        if (balance.compareTo(withdrawAmount) >= 0) {
-            balance = balance.subtract(withdrawAmount);
-            System.out.println("Withdrew: " + formatCurrency(withdrawAmount));
+        BigDecimal toSubtract = new BigDecimal(amount);
+        if (this.balance.compareTo(toSubtract) >= 0) {
+            this.balance = this.balance.subtract(toSubtract);
+            System.out.println("Success! Withdrew: " + formatMoney(toSubtract));
         } else {
-            System.out.println("Insufficient funds for withdrawal!");
+            System.out.println("Transaction Denied: Insufficient funds.");
         }
     }
 
-    // Format numbers with commas and currency symbols
-    public String formatCurrency(BigDecimal amount) {
+    // Helper to make huge numbers readable (adds commas and $)
+    private String formatMoney(BigDecimal amount) {
         return NumberFormat.getCurrencyInstance(Locale.US).format(amount);
     }
 
-    public void displayBalance() {
-        System.out.println(accountHolder + "'s Current Balance: " + formatCurrency(balance));
+    public void showStatus() {
+        System.out.println("------------------------------------");
+        System.out.println("Account Owner: " + owner);
+        System.out.println("Current Balance: " + formatMoney(balance));
+        System.out.println("------------------------------------");
     }
 
     public static void main(String[] args) {
-        // Example with a LOT of numbers
-        BankAccount myAccount = new BankAccount("Alex", "1000000000.00"); // 1 Billion
+        // Initializing with 10 Billion dollars
+        bankaccount myAccount = new bankaccount("Elon Musk", "10000000000.00");
 
-        myAccount.displayBalance();
-        myAccount.deposit("53"); // Adding half a billion and 75 cents
-        myAccount.withdraw("200");
+        myAccount.showStatus();
         
-        myAccount.displayBalance();
+        // Depositing a massive amount with specific cents
+        myAccount.deposit("5000000000.85"); 
+        
+        myAccount.withdraw("1200.50");
+
+        myAccount.showStatus();
     }
 }
