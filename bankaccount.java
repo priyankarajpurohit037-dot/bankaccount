@@ -49,9 +49,9 @@ public class bankaccount {
         myAccount.showStatus();
         
         // Depositing a massive amount with specific cents
-        myAccount.deposit("5000000000.85"); 
+        myAccount.deposit("52"); 
         
-        myAccount.withdraw("1200.50");
+        myAccount.withdraw("4000");
 
         myAccount.showStatus();
     }
