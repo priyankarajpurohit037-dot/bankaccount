@@ -1,117 +1,53 @@
-import java.util.Scanner;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 
-/**
- * A simple BankAccount class with deposit, withdraw, and balance display functionality.
- */
-class BankAccount {
+public class BankAccount {
     private String accountHolder;
-    private String accountNumber;
-    private double balance;
+    private BigDecimal balance;
 
     // Constructor
-    public BankAccount(String accountHolder, String accountNumber, double initialBalance) {
-        if (initialBalance < 0) {
-            throw new IllegalArgumentException("Initial balance cannot be negative.");
-        }
+    public BankAccount(String accountHolder, String initialBalance) {
         this.accountHolder = accountHolder;
-        this.accountNumber = accountNumber;
-        this.balance = initialBalance;
+        // We use a String constructor for BigDecimal to maintain exact precision
+        this.balance = new BigDecimal(initialBalance);
     }
 
-    // Deposit method
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            System.out.println("Deposit amount must be positive.");
-            return;
+    // Method to deposit money
+    public void deposit(String amount) {
+        BigDecimal depositAmount = new BigDecimal(amount);
+        balance = balance.add(depositAmount);
+        System.out.println("Deposited: " + formatCurrency(depositAmount));
+    }
+
+    // Method to withdraw money
+    public void withdraw(String amount) {
+        BigDecimal withdrawAmount = new BigDecimal(amount);
+        if (balance.compareTo(withdrawAmount) >= 0) {
+            balance = balance.subtract(withdrawAmount);
+            System.out.println("Withdrew: " + formatCurrency(withdrawAmount));
+        } else {
+            System.out.println("Insufficient funds for withdrawal!");
         }
-        balance += amount;
-        System.out.printf("Successfully deposited ₹%.2f%n", amount);
     }
 
-    // Withdraw method
-    public void withdraw(double amount) {
-        if (amount <= 0) {
-            System.out.println("Withdrawal amount must be positive.");
-            return;
-        }
-        if (amount > balance) {
-            System.out.println("Insufficient balance.");
-            return;
-        }
-        balance -= amount;
-        System.out.printf("Successfully withdrew ₹%.2f%n", amount);
+    // Format numbers with commas and currency symbols
+    public String formatCurrency(BigDecimal amount) {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(amount);
     }
 
-    // Display account details
-    public void displayAccountDetails() {
-        System.out.println("\n--- Account Details ---");
-        System.out.println("Account Holder: " + accountHolder);
-        System.out.println("Account Number: " + accountNumber);
-        System.out.printf("Current Balance: ₹%.2f%n", balance);
+    public void displayBalance() {
+        System.out.println(accountHolder + "'s Current Balance: " + formatCurrency(balance));
     }
-}
 
-/**
- * Main class to run the BankAccount program.
- */
-public class BankApp {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        // Example with a LOT of numbers
+        BankAccount myAccount = new BankAccount("Alex", "1000000000.00"); // 1 Billion
 
-        try {
-            // Create account
-            System.out.print("Enter account holder name: ");
-            String name = sc.nextLine();
-
-            System.out.print("Enter account number: ");
-            String accNumber = sc.nextLine();
-
-            System.out.print("Enter initial balance: ");
-            double initialBalance = sc.nextDouble();
-
-            BankAccount account = new BankAccount(name, accNumber, initialBalance);
-
-            // Menu-driven banking operations
-            int choice;
-            do {
-                System.out.println("\n--- Banking Menu ---");
-                System.out.println("1. deposit");
-                System.out.println("2. Withdraw");
-                System.out.println("3. Display Account Details");
-                System.out.println("4. Exit");
-                System.out.print("Enter your choice: ");
-                while (!sc.hasNextInt()) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    sc.next();
-                }
-                choice = sc.nextInt();
-
-                switch (choice) {
-                    case 1:
-                        System.out.print("Enter deposit amount: ");
-                        double depositAmount = sc.nextDouble();
-                        account.deposit(depositAmount);
-                        break;
-                    case 2:
-                        System.out.print("Enter withdrawal amount: ");
-                        double withdrawAmount = sc.nextDouble();
-                        account.withdraw(withdrawAmount);
-                        break;
-                    case 3:
-                        account.displayAccountDetails();
-                        break;
-                    case 4:
-                        System.out.println("Thank ");
-                        break;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                }
-            } while (choice != 4);
-
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-        } finally {
-            sc.close();
-        }
+        myAccount.displayBalance();
+        myAccount.deposit("500000000.75"); // Adding half a billion and 75 cents
+        myAccount.withdraw("250.00");
+        
+        myAccount.displayBalance();
     }
 }
